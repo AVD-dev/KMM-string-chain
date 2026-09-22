@@ -260,6 +260,133 @@ input {
   width: 100%;
 }
 
+/* RESTORE CARD*/
+.deleted-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 1rem;
+
+  background: rgb(0 0 0 / 15%);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 200ms ease,
+    visibility 200ms ease;
+}
+
+.deleted-overlay--visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Deleted card */
+
+.deleted-card {
+  width: 100%;
+  max-width: 35rem;
+  max-height: calc(100dvh - 2rem);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  padding: 1.5rem;
+
+  background: #fff;
+  border-radius: 1rem;
+
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 15%);
+
+  opacity: 0;
+  transform: translateY(-3rem);
+
+  transition:
+    transform 250ms ease,
+    opacity 250ms ease;
+}
+
+.deleted-overlay--visible .deleted-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Deleted card title */
+
+.deleted-card__title {
+  margin: 0;
+
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+/* Deleted list */
+
+.deleted-card__list {
+  min-height: 8rem;
+  max-height: 20rem;
+
+  margin: 0;
+  padding: 0.5rem;
+
+  list-style: none;
+
+  border: 1px solid #d5d5d5;
+  background: #fafafa;
+
+  overflow-y: auto;
+}
+
+.deleted-card__item {
+  padding: 0;
+}
+
+.deleted-card__item-label {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  padding: 0.5rem 0.75rem;
+
+  cursor: pointer;
+}
+
+.deleted-card__item:hover {
+  background: #eeeeee;
+}
+
+.deleted-card__item--selected {
+  background: #354cff;
+  color: #fff;
+}
+
+.deleted-card__item--selected:hover {
+  background: #354cff;
+}
+
+/* Deleted actions */
+
+.deleted-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.deleted-card__actions .button {
+  width: 100%;
+}
+
 /* Desktop */
 
 @media (min-width: 600px) {
@@ -296,6 +423,20 @@ input {
   }
 
   .add-panel__actions .button {
+    width: auto;
+    min-width: 7rem;
+  }
+
+  .deleted-card {
+    padding: 2.5rem;
+  }
+
+  .deleted-card__actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .deleted-card__actions .button {
     width: auto;
     min-width: 7rem;
   }
