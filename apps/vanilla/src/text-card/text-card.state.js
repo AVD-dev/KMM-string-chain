@@ -5,6 +5,8 @@ const INITIAL_TEXTS = [
   { id: "4", text: "Item 4" },
 ];
 
+const MAX_DELETED_TEXTS = 10;
+
 export default function createTextCardState() {
   let texts = [...INITIAL_TEXTS];
   let selectedIds = new Set();
@@ -85,7 +87,15 @@ export default function createTextCardState() {
 
       const removedTexts = texts.filter(({ id }) => selectedIds.has(id));
 
-      deletedTexts = [...deletedTexts, ...removedTexts];
+      deletedTexts = [...deletedTexts, ...removedTexts].slice(
+        -MAX_DELETED_TEXTS,
+      );
+
+      const deletedIds = new Set(deletedTexts.map(({ id }) => id));
+
+      selectedDeletedIds = new Set(
+        [...selectedDeletedIds].filter((id) => deletedIds.has(id)),
+      );
 
       texts = texts.filter(({ id }) => !selectedIds.has(id));
 
