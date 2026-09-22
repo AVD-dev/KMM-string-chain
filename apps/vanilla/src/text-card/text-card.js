@@ -5,7 +5,9 @@ export default function createTextCard(container) {
   const state = createTextCardState();
   const view = createTextCardView(container);
 
-  function render() {
+  // Renders
+
+  function renderActiveTexts() {
     view.renderTexts(state.getTexts(), state.getSelectedIds());
   }
 
@@ -16,7 +18,9 @@ export default function createTextCard(container) {
     );
   }
 
-  view.list.addEventListener("change", (event) => {
+  // Handlers
+
+  function handleItemSelection(event) {
     const checkbox = event.target.closest("[data-item-id]");
 
     if (!checkbox) {
@@ -25,28 +29,25 @@ export default function createTextCard(container) {
 
     state.setItemSelected(checkbox.dataset.itemId, checkbox.checked);
 
-    render();
-  });
+    renderActiveTexts();
+  }
 
-  view.selectAllCheckbox.addEventListener("change", (event) => {
+  function handleSelectAll(event) {
     state.setAllSelected(event.target.checked);
+    renderActiveTexts();
+  }
 
-    render();
-  });
-
-  view.deleteButton.addEventListener("click", () => {
+  function handleDelete() {
     state.removeSelectedItems();
+    renderActiveTexts();
+  }
 
-    render();
-  });
-
-  view.resetButton.addEventListener("click", () => {
+  function handleOpenDeletedCard() {
     renderDeletedTexts();
-
     view.deletedCard.open();
-  });
+  }
 
-  view.deletedCard.list.addEventListener("change", (event) => {
+  function handleDeletedItemSelection(event) {
     const checkbox = event.target.closest("[data-deleted-item-id]");
 
     if (!checkbox) {
@@ -59,34 +60,30 @@ export default function createTextCard(container) {
     );
 
     renderDeletedTexts();
-  });
+  }
 
-  view.deletedCard.confirmRestoreButton.addEventListener("click", () => {
+  function handleRestoreDeletedItems() {
     state.restoreSelectedItems();
 
-    render();
+    renderActiveTexts();
     renderDeletedTexts();
 
     view.deletedCard.close();
-  });
+  }
 
-  view.deletedCard.cancelButton.addEventListener("click", () => {
+  function handleCloseDeletedCard() {
     view.deletedCard.close();
-  });
+  }
 
-  view.addButton.addEventListener("click", () => {
-    view.addPanel.element.classList.add("add-overlay--visible");
+  function handleOpenAddPanel() {
+    view.addPanel.open();
+  }
 
-    view.addPanel.input.focus();
-  });
+  function handleCloseAddPanel() {
+    view.addPanel.close();
+  }
 
-  view.addPanel.cancelButton.addEventListener("click", () => {
-    view.addPanel.element.classList.remove("add-overlay--visible");
-
-    view.addPanel.input.value = "";
-  });
-
-  view.addPanel.form.addEventListener("submit", (event) => {
+  function handleAddText(event) {
     event.preventDefault();
 
     const text = view.addPanel.input.value.trim();
@@ -97,12 +94,40 @@ export default function createTextCard(container) {
 
     state.addText(text);
 
-    view.addPanel.input.value = "";
+    view.addPanel.close();
 
-    view.addPanel.element.classList.remove("add-overlay--visible");
+    renderActiveTexts();
+  }
 
-    render();
-  });
+  // Event listener
 
-  render();
+  view.list.addEventListener("change", handleItemSelection);
+
+  view.selectAllCheckbox.addEventListener("change", handleSelectAll);
+
+  view.deleteButton.addEventListener("click", handleDelete);
+
+  view.resetButton.addEventListener("click", handleOpenDeletedCard);
+
+  view.deletedCard.list.addEventListener("change", handleDeletedItemSelection);
+
+  view.deletedCard.confirmRestoreButton.addEventListener(
+    "click",
+    handleRestoreDeletedItems,
+  );
+
+  view.deletedCard.cancelButton.addEventListener(
+    "click",
+    handleCloseDeletedCard,
+  );
+
+  view.addButton.addEventListener("click", handleOpenAddPanel);
+
+  view.addPanel.cancelButton.addEventListener("click", handleCloseAddPanel);
+
+  view.addPanel.form.addEventListener("submit", handleAddText);
+
+  // Initial render
+
+  renderActiveTexts();
 }

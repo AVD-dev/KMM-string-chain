@@ -2,8 +2,7 @@ function createAddPanel() {
   const overlay = document.createElement("div");
   overlay.classList.add("add-overlay");
 
-  const form = document.createElement("form");
-  form.classList.add("add-panel");
+  const form = createCard("add-panel", "form");
 
   const label = document.createElement("label");
   label.classList.add("add-panel__label");
@@ -37,19 +36,61 @@ function createAddPanel() {
     input,
     confirmButton,
     cancelButton,
+
+    open() {
+      overlay.classList.add("add-overlay--visible");
+      input.focus();
+    },
+
+    close() {
+      overlay.classList.remove("add-overlay--visible");
+      input.value = "";
+    },
   };
+}
+
+function createCard(className, tagName = "section") {
+  const cardElement = document.createElement(tagName);
+  cardElement.classList.add(className);
+
+  return cardElement;
+}
+
+function createSelectableItem({ id, text, selected, classPrefix, datasetKey }) {
+  const item = document.createElement("li");
+  item.classList.add(`${classPrefix}__item`);
+
+  const label = document.createElement("label");
+  label.classList.add(`${classPrefix}__item-label`);
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.classList.add("text-card__checkbox");
+  checkbox.dataset[datasetKey] = id;
+  checkbox.checked = selected;
+
+  const itemText = document.createElement("span");
+  itemText.textContent = text;
+
+  label.append(checkbox, itemText);
+  item.append(label);
+
+  if (selected) {
+    item.classList.add(`${classPrefix}__item--selected`);
+  }
+
+  return item;
 }
 
 function createDeletedCard() {
   const overlay = document.createElement("div");
   overlay.classList.add("deleted-overlay");
 
-  const card = document.createElement("section");
-  card.classList.add("deleted-card");
+  const card = createCard("deleted-card");
 
   const title = document.createElement("h2");
   title.classList.add("deleted-card__title");
-  title.textContent = "Deleted items";
+  title.textContent = "The last 10 deleted items";
 
   const list = document.createElement("ul");
   list.classList.add("deleted-card__list");
@@ -89,27 +130,13 @@ function createDeletedCard() {
       list.replaceChildren();
 
       texts.forEach(({ id, text }) => {
-        const item = document.createElement("li");
-        item.classList.add("deleted-card__item");
-
-        const label = document.createElement("label");
-        label.classList.add("deleted-card__item-label");
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.classList.add("text-card__checkbox");
-        checkbox.dataset.deletedItemId = id;
-        checkbox.checked = selectedIds.has(id);
-
-        const itemText = document.createElement("span");
-        itemText.textContent = text;
-
-        label.append(checkbox, itemText);
-        item.append(label);
-
-        if (selectedIds.has(id)) {
-          item.classList.add("deleted-card__item--selected");
-        }
+        const item = createSelectableItem({
+          id,
+          text,
+          selected: selectedIds.has(id),
+          classPrefix: "deleted-card",
+          datasetKey: "deletedItemId",
+        });
 
         list.append(item);
       });
@@ -119,10 +146,7 @@ function createDeletedCard() {
   };
 }
 
-export default function createTextCardView(container) {
-  const card = document.createElement("section");
-  card.classList.add("text-card");
-
+function createTextCardHeader() {
   const header = document.createElement("header");
   header.classList.add("text-card__header");
 
@@ -137,12 +161,12 @@ export default function createTextCardView(container) {
 
   header.append(title, description);
 
-  /*
-   * List
-   */
+  return header;
+}
 
-  const listContainer = document.createElement("div");
-  listContainer.classList.add("text-card__list-container");
+function createTextList() {
+  const element = document.createElement("div");
+  element.classList.add("text-card__list-container");
 
   const selectAllLabel = document.createElement("label");
   selectAllLabel.classList.add("text-card__select-all");
@@ -154,19 +178,49 @@ export default function createTextCardView(container) {
   const selectAllText = document.createElement("span");
   selectAllText.textContent = "Seleccionar todo";
 
-  selectAllLabel.append(selectAllCheckbox, selectAllText);
-
   const list = document.createElement("ul");
   list.classList.add("text-card__list");
 
-  listContainer.append(selectAllLabel, list);
+  selectAllLabel.append(selectAllCheckbox, selectAllText);
+  element.append(selectAllLabel, list);
 
-  /*
-   * Actions
-   */
+  return {
+    element,
+    list,
+    selectAllCheckbox,
 
-  const actions = document.createElement("footer");
-  actions.classList.add("text-card__actions");
+    render(texts, selectedIds) {
+      list.replaceChildren();
+
+      const selectedCount = selectedIds.size;
+      const totalCount = texts.length;
+
+      selectAllCheckbox.checked =
+        totalCount > 0 && selectedCount === totalCount;
+
+      selectAllCheckbox.indeterminate =
+        selectedCount > 0 && selectedCount < totalCount;
+
+      selectAllCheckbox.disabled = totalCount === 0;
+
+      texts.forEach(({ id, text }) => {
+        const item = createSelectableItem({
+          id,
+          text,
+          selected: selectedIds.has(id),
+          classPrefix: "text-card",
+          datasetKey: "itemId",
+        });
+
+        list.append(item);
+      });
+    },
+  };
+}
+
+function createTextCardActions() {
+  const element = document.createElement("footer");
+  element.classList.add("text-card__actions");
 
   const leftActions = document.createElement("div");
   leftActions.classList.add("text-card__actions-left");
@@ -188,68 +242,44 @@ export default function createTextCardView(container) {
   addButton.textContent = "ADD";
 
   leftActions.append(resetButton, deleteButton);
-  actions.append(leftActions, addButton);
+  element.append(leftActions, addButton);
 
-  /*
-   * Mount
-   */
+  return {
+    element,
+    resetButton,
+    deleteButton,
+    addButton,
+  };
+}
 
-  card.append(header, listContainer, actions);
+export default function createTextCardView(container) {
+  const card = createCard("text-card");
+
+  const header = createTextCardHeader();
+  const textList = createTextList();
+  const actions = createTextCardActions();
 
   const addPanel = createAddPanel();
   const deletedCard = createDeletedCard();
 
-  container.append(card);
+  card.append(header, textList.element, actions.element);
 
+  container.append(card);
   document.body.append(addPanel.element, deletedCard.element);
 
   return {
-    list,
-    selectAllCheckbox,
-    resetButton,
-    deleteButton,
-    addButton,
+    list: textList.list,
+    selectAllCheckbox: textList.selectAllCheckbox,
+
+    resetButton: actions.resetButton,
+    deleteButton: actions.deleteButton,
+    addButton: actions.addButton,
+
     addPanel,
     deletedCard,
 
     renderTexts(texts, selectedIds) {
-      list.replaceChildren();
-      const selectedCount = selectedIds.size;
-      const totalCount = texts.length;
-
-      selectAllCheckbox.checked =
-        totalCount > 0 && selectedCount === totalCount;
-
-      selectAllCheckbox.indeterminate =
-        selectedCount > 0 && selectedCount < totalCount;
-
-      selectAllCheckbox.disabled = totalCount === 0;
-
-      texts.forEach(({ id, text }) => {
-        const item = document.createElement("li");
-        item.classList.add("text-card__item");
-
-        const label = document.createElement("label");
-        label.classList.add("text-card__item-label");
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.classList.add("text-card__checkbox");
-        checkbox.dataset.itemId = id;
-        checkbox.checked = selectedIds.has(id);
-
-        const itemText = document.createElement("span");
-        itemText.textContent = text;
-
-        label.append(checkbox, itemText);
-        item.append(label);
-
-        if (selectedIds.has(id)) {
-          item.classList.add("text-card__item--selected");
-        }
-
-        list.append(item);
-      });
+      textList.render(texts, selectedIds);
     },
   };
 }

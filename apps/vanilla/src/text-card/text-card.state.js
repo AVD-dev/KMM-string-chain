@@ -7,6 +7,15 @@ const INITIAL_TEXTS = [
 
 const MAX_DELETED_TEXTS = 10;
 
+function updateSelection(selection, id, isSelected) {
+  if (isSelected) {
+    selection.add(id);
+    return;
+  }
+
+  selection.delete(id);
+}
+
 export default function createTextCardState() {
   let texts = [...INITIAL_TEXTS];
   let selectedIds = new Set();
@@ -38,12 +47,7 @@ export default function createTextCardState() {
         return;
       }
 
-      if (isSelected) {
-        selectedIds.add(id);
-        return;
-      }
-
-      selectedIds.delete(id);
+      updateSelection(selectedIds, id, isSelected);
     },
 
     setDeletedItemSelected(id, isSelected) {
@@ -53,12 +57,7 @@ export default function createTextCardState() {
         return;
       }
 
-      if (isSelected) {
-        selectedDeletedIds.add(id);
-        return;
-      }
-
-      selectedDeletedIds.delete(id);
+      updateSelection(selectedDeletedIds, id, isSelected);
     },
 
     setAllSelected(isSelected) {
