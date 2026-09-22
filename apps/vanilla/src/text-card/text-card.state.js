@@ -7,19 +7,30 @@ const INITIAL_TEXTS = [
 
 export default function createTextCardState() {
   let texts = [...INITIAL_TEXTS];
-  let selectedId = null;
+  let selectedIds = new Set();
 
   return {
     getTexts() {
       return [...texts];
     },
 
-    getSelectedId() {
-      return selectedId;
+    getSelectedIds() {
+      return new Set(selectedIds);
     },
 
-    selectItem(id) {
-      selectedId = id;
+    setItemSelected(id, isSelected) {
+      const exists = texts.some((item) => item.id === id);
+
+      if (!exists) {
+        return;
+      }
+
+      if (isSelected) {
+        selectedIds.add(id);
+        return;
+      }
+
+      selectedIds.delete(id);
     },
 
     addText(text) {
@@ -32,18 +43,18 @@ export default function createTextCardState() {
       ];
     },
 
-    removeSelectedItem() {
-      if (!selectedId) {
+    removeSelectedItems() {
+      if (selectedIds.size === 0) {
         return;
       }
 
-      texts = texts.filter(({ id }) => id !== selectedId);
-      selectedId = null;
+      texts = texts.filter(({ id }) => !selectedIds.has(id));
+      selectedIds.clear();
     },
 
     reset() {
       texts = [...INITIAL_TEXTS];
-      selectedId = null;
+      selectedIds.clear();
     },
   };
 }

@@ -6,23 +6,23 @@ export default function createTextCard(container) {
   const view = createTextCardView(container);
 
   function render() {
-    view.renderTexts(state.getTexts(), state.getSelectedId());
+    view.renderTexts(state.getTexts(), state.getSelectedIds());
   }
 
-  view.list.addEventListener("click", (event) => {
-    const item = event.target.closest("[data-item-id]");
+  view.list.addEventListener("change", (event) => {
+    const checkbox = event.target.closest("[data-item-id]");
 
-    if (!item) {
+    if (!checkbox) {
       return;
     }
 
-    state.selectItem(item.dataset.itemId);
+    state.setItemSelected(checkbox.dataset.itemId, checkbox.checked);
 
     render();
   });
 
   view.deleteButton.addEventListener("click", () => {
-    state.removeSelectedItem();
+    state.removeSelectedItems();
 
     render();
   });

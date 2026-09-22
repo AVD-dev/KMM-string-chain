@@ -58,22 +58,36 @@ export default function createTextCardView(container) {
     addButton,
     addPanel,
 
-    renderTexts(texts, selectedId) {
+    renderTexts(texts, selectedIds) {
       list.replaceChildren();
 
       texts.forEach(({ id, text }) => {
         const item = document.createElement("li");
-
         item.classList.add("text-card__item");
-        item.dataset.itemId = id;
-        item.textContent = text;
 
-        if (id === selectedId) {
+        const label = document.createElement("label");
+        label.classList.add("text-card__item-label");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.classList.add("text-card__checkbox");
+        checkbox.dataset.itemId = id;
+        checkbox.checked = selectedIds.has(id);
+
+        const itemText = document.createElement("span");
+        itemText.textContent = text;
+
+        label.append(checkbox, itemText);
+        item.append(label);
+
+        if (selectedIds.has(id)) {
           item.classList.add("text-card__item--selected");
         }
 
         list.append(item);
       });
+
+      deleteButton.disabled = selectedIds.size === 0;
     },
   };
 }
