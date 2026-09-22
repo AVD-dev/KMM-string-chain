@@ -42,6 +42,14 @@ export default function createTextCardState() {
         },
       ];
     },
+    setAllSelected(isSelected) {
+      if (isSelected) {
+        selectedIds = new Set(texts.map(({ id }) => id));
+        return;
+      }
+
+      selectedIds.clear();
+    },
 
     removeSelectedItems() {
       if (selectedIds.size === 0) {

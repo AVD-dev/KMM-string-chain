@@ -23,14 +23,14 @@ input {
 }
 
 #app {
+  width: 100dvw;
+  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100dvh;
-  width: 100dvw;
-  max-height: 100dvh;
-  overflow: hidden;
   padding: 1rem;
+  overflow: hidden;
 }
 
 /* Card */
@@ -39,15 +39,14 @@ input {
   width: 100%;
   max-width: 45rem;
   max-height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 
   padding: 1.5rem;
-
   background: #fff;
   border-radius: 1rem;
-
   box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 10%);
 }
 
@@ -57,32 +56,59 @@ input {
 
 .text-card__title {
   margin: 0 0 0.75rem;
-
   font-size: 1.75rem;
   font-weight: 500;
 }
 
 .text-card__description {
   margin: 0;
-
   font-size: 0.95rem;
   line-height: 1.4;
 }
 
-.text-card__list {
+/* List */
+
+.text-card__list-container {
   min-height: 11rem;
-  max-height: 100%;
-  overflow-y: auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d5d5d5;
+  background: #fafafa;
+  overflow: hidden;
+}
+
+.text-card__select-all {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  border-bottom: 1px solid #d5d5d5;
+  cursor: pointer;
+}
+
+.text-card__list {
+  min-height: 0;
   margin: 0;
   padding: 0.5rem;
 
   list-style: none;
 
-  border: 1px solid #d5d5d5;
-  background: #fafafa;
+  overflow-y: auto;
 }
 
 .text-card__item {
+  padding: 0;
+}
+
+.text-card__item-label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
   padding: 0.5rem 0.75rem;
 
   cursor: pointer;
@@ -101,20 +127,9 @@ input {
   background: #354cff;
 }
 
-.text-card__item-label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-
-  cursor: pointer;
-}
-
 .text-card__checkbox {
+  flex-shrink: 0;
   margin: 0;
-
   cursor: pointer;
 }
 
@@ -124,6 +139,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 .text-card__actions-left {
@@ -268,10 +284,6 @@ input {
   .button--primary {
     width: auto;
     min-width: 7rem;
-  }
-
-  .add-overlay {
-    padding-top: 2.5rem;
   }
 
   .add-panel {

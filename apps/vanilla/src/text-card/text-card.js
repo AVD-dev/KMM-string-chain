@@ -27,6 +27,12 @@ export default function createTextCard(container) {
     render();
   });
 
+  view.selectAllCheckbox.addEventListener("change", (event) => {
+    state.setAllSelected(event.target.checked);
+
+    render();
+  });
+
   view.resetButton.addEventListener("click", () => {
     state.reset();
 
