@@ -1,0 +1,19 @@
+{
+  "name": "kmm-string-chain",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:vanilla": "npm run dev --workspace=vanilla",
+    "dev:react": "npm run dev --workspace=react",
+    "build": "npm run build --workspaces"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
