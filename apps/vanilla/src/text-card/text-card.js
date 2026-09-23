@@ -1,5 +1,5 @@
 import createTextCardState from "./text-card.state.js";
-import createTextCardView from "./text-card.view.js";
+import createTextCardView from "./view/text-card.composer.js";
 
 export default function createTextCard(container) {
   const state = createTextCardState();
