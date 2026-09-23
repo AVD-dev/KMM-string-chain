@@ -11,6 +11,11 @@
   cursor: pointer;
   max-height: 2.6rem;
 
+  &:hover {
+    font-weight: bold;
+    border: 2px solid;
+  }
+
   &--danger {
     color: red;
     border-color: red;

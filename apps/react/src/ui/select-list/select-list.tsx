@@ -1,14 +1,14 @@
 import "./select-list.scss";
 
 export type Item = {
-  id: number;
+  id: string;
   label: string;
   selected: boolean;
 };
 
 export type SelectListProps = {
   items: Item[];
-  onSelectedChange: (id: number, selected: boolean) => void;
+  onSelectedChange: (id: string, selected: boolean) => void;
 };
 
 export function SelectList({ items, onSelectedChange }: SelectListProps) {
