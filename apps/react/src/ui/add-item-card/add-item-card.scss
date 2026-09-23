@@ -1,0 +1,66 @@
+.add-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100dvh;
+  background: rgb(224, 255, 255, 0.5);
+  animation: fade-in 200ms ease-out;
+
+  &__card {
+    animation: slide-in 250ms ease-out;
+    height: fit-content;
+    width: 50dvw;
+    min-width: 20rem;
+    max-width: 30rem;
+  }
+
+  &__field {
+    height: 2.5rem;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0 1rem;
+    background-color: #f7f7f7;
+    border: thin solid #0000001a;
+    border-radius: 1rem;
+
+    &:focus {
+      outline: thin solid #cccccc;
+    }
+  }
+
+  .card-actions {
+    width: 100%;
+    display: inline-flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .button-chip {
+      width: 6rem;
+    }
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
