@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import "./button-chip.scss";
 
-type ButtonChipProps = {
+export type ButtonChipProps = {
   children?: string;
   severity?: "danger";
   outlined?: boolean;

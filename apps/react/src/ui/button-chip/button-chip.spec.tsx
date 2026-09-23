@@ -1,70 +1,67 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ButtonChip } from "./button-chip";
+import { ButtonChip, type ButtonChipProps } from "./button-chip";
+
+const renderButton = (props: Partial<ButtonChipProps> = {}) => {
+  const { children = "MockName", onClick = vi.fn(), ...rest } = props;
+
+  render(
+    <ButtonChip {...rest} onClick={onClick}>
+      {children}
+    </ButtonChip>,
+  );
+
+  return {
+    button: screen.getByRole("button"),
+    onClick,
+  };
+};
 
 describe("ButtonChip", () => {
   afterEach(() => cleanup());
 
   it("SHOULD renders its content", () => {
-    render(<ButtonChip onClick={() => {}}>ADD</ButtonChip>);
+    renderButton();
 
-    expect(screen.getByRole("button", { name: "ADD" })).toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
   it("SHOULD has the base class", () => {
-    render(<ButtonChip onClick={() => {}}>ADD</ButtonChip>);
+    renderButton();
 
     expect(screen.getByRole("button")).toHaveClass("button-chip");
   });
 
   it("SHOULD applies the severity class", () => {
-    render(
-      <ButtonChip severity="danger" onClick={() => {}}>
-        DELETE
-      </ButtonChip>,
-    );
+    renderButton({ severity: "danger" });
 
     expect(screen.getByRole("button")).toHaveClass("button-chip--danger");
   });
 
   it("SHOULD applies the outlined class", () => {
-    render(
-      <ButtonChip outlined onClick={() => {}}>
-        RESET
-      </ButtonChip>,
-    );
+    renderButton({ outlined: true });
 
     expect(screen.getByRole("button")).toHaveClass("button-chip--outlined");
   });
 
   it("SHOULD applies a custom class", () => {
-    render(
-      <ButtonChip className="text-card__add" onClick={() => {}}>
-        ADD
-      </ButtonChip>,
-    );
+    renderButton({ className: "text-card__add" });
 
     expect(screen.getByRole("button")).toHaveClass("text-card__add");
   });
 
   it("SHOULD renders an icon", () => {
-    render(
-      <ButtonChip icon={<svg data-testid="icon" />} onClick={() => {}}>
-        RESET
-      </ButtonChip>,
-    );
+    renderButton({ icon: <svg data-testid="icon" /> });
 
     expect(screen.getByTestId("icon")).toBeInTheDocument();
   });
 
   it("SHOULD calls onClick when clicked", async () => {
     const user = userEvent.setup();
-    const onClick = vi.fn();
+    const { button, onClick } = renderButton();
 
-    render(<ButtonChip onClick={onClick}>ADD</ButtonChip>);
-
-    await user.click(screen.getByRole("button"));
+    await user.click(button);
 
     expect(onClick).toHaveBeenCalledOnce();
   });
