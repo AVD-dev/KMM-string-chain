@@ -39,7 +39,9 @@ export function AddItemCard({ onCancel, onSubmit }: AddItemCardProps) {
         subheader={"Add item to list"}
         footer={
           <div className="card-actions">
-            <ButtonChip onClick={() => submitting(value)}>ADD</ButtonChip>
+            <ButtonChip onClick={() => submitting(value)} disabled={!value}>
+              ADD
+            </ButtonChip>
             <ButtonChip onClick={close} outlined={true}>
               CANCEL
             </ButtonChip>

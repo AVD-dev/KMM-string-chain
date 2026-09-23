@@ -11,9 +11,14 @@
   cursor: pointer;
   max-height: 2.6rem;
 
-  &:hover {
+  &:not(:disabled):hover {
     font-weight: bold;
     border: 2px solid;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
   }
 
   &--danger {

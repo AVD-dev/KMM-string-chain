@@ -7,6 +7,7 @@ export type ButtonChipProps = {
   outlined?: boolean;
   icon?: ReactNode;
   className?: string;
+  disabled?: boolean;
   onClick: () => void;
 };
 
@@ -15,6 +16,7 @@ export function ButtonChip({
   severity,
   outlined = false,
   className = "",
+  disabled = false,
   icon,
   onClick,
 }: ButtonChipProps) {
@@ -28,7 +30,12 @@ export function ButtonChip({
     .join(" ");
 
   return (
-    <button type="button" className={classes} onClick={onClick}>
+    <button
+      disabled={disabled}
+      type="button"
+      className={classes}
+      onClick={onClick}
+    >
       {icon}
       {children}
     </button>
