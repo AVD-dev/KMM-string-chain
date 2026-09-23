@@ -8,11 +8,12 @@ html,
 body,
 #root {
   margin: 0;
-  min-height: 100%;
 }
 
 body {
+  margin: 0;
+  padding: 0;
   font-family: "Montserrat Variable", sans-serif;
-  line-height: 1.25rem;
+  line-height: 1.5rem;
   background: radial-gradient(circle, #a1c4fd 0%, #c2e9fb 100%);
 }
