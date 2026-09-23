@@ -13,7 +13,6 @@ body,
 
 body {
   font-family: "Montserrat Variable", sans-serif;
-  letter-spacing: 0.1rem;
   line-height: 1.25rem;
   background: radial-gradient(circle, #a1c4fd 0%, #c2e9fb 100%);
 }
