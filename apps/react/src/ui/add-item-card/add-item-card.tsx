@@ -10,21 +10,37 @@ export type AddItemCardProps = {
 
 export function AddItemCard({ onCancel, onSubmit }: AddItemCardProps) {
   const [value, setValue] = useState("");
+  const [isClosing, setIsClosing] = useState(false);
 
   const submitting = (label: string) => {
     onSubmit(label);
+    close();
+  };
+
+  const close = () => {
+    setIsClosing(true);
+  };
+
+  const handleAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
+    if (!isClosing || event.target !== event.currentTarget) {
+      return;
+    }
+
     onCancel();
   };
 
   return (
-    <div className="add-item">
+    <div
+      className={isClosing ? "add-item add-item--closing" : "add-item"}
+      onAnimationEnd={handleAnimationEnd}
+    >
       <Card
         className="add-item__card"
         subheader={"Add item to list"}
         footer={
           <div className="card-actions">
             <ButtonChip onClick={() => submitting(value)}>ADD</ButtonChip>
-            <ButtonChip onClick={onCancel} outlined={true}>
+            <ButtonChip onClick={close} outlined={true}>
               CANCEL
             </ButtonChip>
           </div>
