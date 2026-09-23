@@ -1,0 +1,18 @@
+.card {
+  border: thin solid lightgray;
+  padding: 2rem 3rem;
+  width: fit-content;
+  border-radius: 1rem;
+  box-shadow: 0 0 1rem 0 #5b6efc;
+  background: white;
+
+  &__header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__footer {
+    width: 100%;
+  }
+}
